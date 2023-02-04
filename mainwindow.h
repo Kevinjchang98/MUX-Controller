@@ -22,11 +22,18 @@ class MainWindow : public QWidget {
   Ui::MainWindow *ui;
 
   static constexpr int window_width = 400;
-  static constexpr int window_height = 700;
+  static constexpr int window_height = 400;
   static constexpr int window_margin = 10;
+  static constexpr int item_offset_vertical = 40;
 
   QString host = "192.168.150.25";
   int port = 5000;
+
+  int from = 1;
+  int to = 1;
+
+  void connectionHandler();
+  void setRoute();
 };
 
 #endif //MUX_CONTROLLER__MAINWINDOW_H_
