@@ -22,21 +22,21 @@ MainWindow::MainWindow(QWidget *parent) :
   // MUX Connection Label
   auto connectionInputLabel = new QLabel(this);
   connectionInputLabel->setText("MUX Connection");
-  connectionInputLabel->setGeometry(window_margin, window_margin, window_width, 30);
+  connectionInputLabel->setGeometry(window_margin, window_margin, window_width, item_height);
 
   // Host input box
   auto hostInputBox = new QLineEdit(host, this);
   hostInputBox->setGeometry(window_margin,
                             window_margin + item_offset_vertical * 1,
                             window_width / 2 - 4 * window_margin,
-                            30);
+                            item_height);
 
   // Port input box
   auto portInputBox = new QSpinBox(this);
   portInputBox->setGeometry(window_margin + window_width / 2 - 2 * window_margin,
                             window_margin + item_offset_vertical * 1,
                             window_width / 2 - 4 * window_margin,
-                            30);
+                            item_height);
   portInputBox->setMinimum(0);
   portInputBox->setMaximum(65535);
   portInputBox->setValue(5000);
@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
   // Button to connect to MUX
   auto connectButton = new QPushButton("Connect", this);
-  connectButton->setGeometry(10, window_margin + item_offset_vertical * 2, 80, 30);
+  connectButton->setGeometry(10, window_margin + item_offset_vertical * 2, 80, item_height);
 
   // Run connectionHandler() on button press
   QObject::connect(connectButton, &QPushButton::pressed, [=]() { connectionHandler(); });
@@ -55,14 +55,14 @@ MainWindow::MainWindow(QWidget *parent) :
   // MUX Connection Label
   auto inputRoutingLabel = new QLabel(this);
   inputRoutingLabel->setText("Display Routing");
-  inputRoutingLabel->setGeometry(window_margin, window_margin + item_offset_vertical * 3, window_width, 30);
+  inputRoutingLabel->setGeometry(window_margin, window_margin + item_offset_vertical * 3, window_width, item_height);
 
   // Input routing boxes
   auto fromInputBox = new QSpinBox(this);
   fromInputBox->setGeometry(window_margin,
                             window_margin + item_offset_vertical * 4,
                             window_width / 4 - 4 * window_margin,
-                            30);
+                            item_height);
   fromInputBox->setMinimum(1);
   fromInputBox->setMaximum(4);
   fromInputBox->setValue(1);
@@ -73,7 +73,7 @@ MainWindow::MainWindow(QWidget *parent) :
   toInputBox->setGeometry(window_margin + 2 * (window_width / 4 - 4 * window_margin),
                           window_margin + item_offset_vertical * 4,
                           window_width / 4 - 4 * window_margin,
-                          30);
+                          item_height);
   toInputBox->setMinimum(1);
   toInputBox->setMaximum(4);
   toInputBox->setValue(1);
@@ -85,9 +85,9 @@ MainWindow::MainWindow(QWidget *parent) :
   setRouteButton->setGeometry(window_margin + 4 * (window_width / 4 - 4 * window_margin),
                               window_margin + item_offset_vertical * 4,
                               50,
-                              30);
+                              item_height);
 
-  // Run connectionHandler() on button press
+  // Run setRoute() on button press
   QObject::connect(setRouteButton, &QPushButton::pressed, [=]() { setRoute(); });
 }
 

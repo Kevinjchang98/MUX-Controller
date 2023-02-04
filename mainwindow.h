@@ -25,6 +25,7 @@ class MainWindow : public QWidget {
   static constexpr int window_height = 400;
   static constexpr int window_margin = 10;
   static constexpr int item_offset_vertical = 40;
+  static constexpr int item_height = 30;
 
   QString host = "192.168.150.25";
   int port = 5000;
