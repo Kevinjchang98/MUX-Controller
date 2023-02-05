@@ -6,7 +6,12 @@
 #define MUX_CONTROLLER__MAINWINDOW_H_
 
 #include <QWidget>
+#ifdef __WIN32__
 #include <winsock2.h>
+#endif
+#ifdef __MACH__
+#include <arpa/inet.h>
+#endif
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

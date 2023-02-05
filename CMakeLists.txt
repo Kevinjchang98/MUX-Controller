@@ -18,12 +18,10 @@ target_link_libraries(MUX_Controller
         Qt::Core
         Qt::Gui
         Qt::Widgets
-        ws2_32
-        Mswsock
-        AdvApi32
         )
 
 if (WIN32)
+    target_link_libraries(ws2_32 Mswsock AdvApi32)
     set(DEBUG_SUFFIX)
     if (MSVC AND CMAKE_BUILD_TYPE MATCHES "Debug")
         set(DEBUG_SUFFIX "d")
