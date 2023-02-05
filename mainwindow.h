@@ -40,6 +40,8 @@ class MainWindow : public QWidget {
 
   void connect();
   void setRoute();
+  void connectionForm();
+  void routeForm();
 };
 
 #endif //MUX_CONTROLLER__MAINWINDOW_H_

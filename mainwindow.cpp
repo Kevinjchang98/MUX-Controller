@@ -16,7 +16,54 @@
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
+  connectionForm();
+  routeForm();
+}
 
+MainWindow::~MainWindow() {
+  delete ui;
+}
+
+void MainWindow::routeForm() {// MUX Connection Label
+  auto inputRoutingLabel = new QLabel(this);
+  inputRoutingLabel->setText("Display Routing");
+  inputRoutingLabel->setGeometry(window_margin, window_margin + item_offset_vertical * 3, window_width, item_height);
+
+  // Input routing boxes
+  auto fromInputBox = new QSpinBox(this);
+  fromInputBox->setGeometry(window_margin,
+                            window_margin + item_offset_vertical * 4,
+                            window_width / 4 - 4 * window_margin,
+                            item_height);
+  fromInputBox->setMinimum(1);
+  fromInputBox->setMaximum(4);
+  fromInputBox->setValue(1);
+
+  QObject::connect(fromInputBox, &QSpinBox::valueChanged, [this](auto newFrom) { from = newFrom; });
+
+  auto toInputBox = new QSpinBox(this);
+  toInputBox->setGeometry(window_margin + 2 * (window_width / 4 - 4 * window_margin),
+                          window_margin + item_offset_vertical * 4,
+                          window_width / 4 - 4 * window_margin,
+                          item_height);
+  toInputBox->setMinimum(1);
+  toInputBox->setMaximum(4);
+  toInputBox->setValue(1);
+
+  QObject::connect(toInputBox, &QSpinBox::valueChanged, [this](auto newTo) { to = newTo; });
+
+  // Button to set new route
+  auto setRouteButton = new QPushButton("Set", this);
+  setRouteButton->setGeometry(window_margin + 4 * (window_width / 4 - 4 * window_margin),
+                              window_margin + item_offset_vertical * 4,
+                              50,
+                              item_height);
+
+  // Run setRoute() on button press
+  QObject::connect(setRouteButton, &QPushButton::pressed, [this]() { setRoute(); });
+}
+
+void MainWindow::connectionForm() {
   // Window size
   setFixedSize(window_width, window_height);
 
@@ -43,8 +90,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), ui(new Ui::MainWindow
   portInputBox->setValue(5000);
 
   // Update host and port on value change
-  QObject::connect(hostInputBox, &QLineEdit::textEdited, [this](auto newHost) { this->host = newHost; });
-  QObject::connect(portInputBox, &QSpinBox::valueChanged, [this](auto newPort) { this->port = newPort; });
+  QObject::connect(hostInputBox, &QLineEdit::textEdited, [this](auto newHost) { host = newHost; });
+  QObject::connect(portInputBox, &QSpinBox::valueChanged, [this](auto newPort) { port = newPort; });
 
   // Button to connect to MUX
   auto connectButton = new QPushButton("Connect", this);
@@ -52,48 +99,6 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), ui(new Ui::MainWindow
 
   // Run connect() on button press
   QObject::connect(connectButton, &QPushButton::pressed, [this]() { connect(); });
-
-  // MUX Connection Label
-  auto inputRoutingLabel = new QLabel(this);
-  inputRoutingLabel->setText("Display Routing");
-  inputRoutingLabel->setGeometry(window_margin, window_margin + item_offset_vertical * 3, window_width, item_height);
-
-  // Input routing boxes
-  auto fromInputBox = new QSpinBox(this);
-  fromInputBox->setGeometry(window_margin,
-                            window_margin + item_offset_vertical * 4,
-                            window_width / 4 - 4 * window_margin,
-                            item_height);
-  fromInputBox->setMinimum(1);
-  fromInputBox->setMaximum(4);
-  fromInputBox->setValue(1);
-
-  QObject::connect(fromInputBox, &QSpinBox::valueChanged, [this](auto newFrom) { this->from = newFrom; });
-
-  auto toInputBox = new QSpinBox(this);
-  toInputBox->setGeometry(window_margin + 2 * (window_width / 4 - 4 * window_margin),
-                          window_margin + item_offset_vertical * 4,
-                          window_width / 4 - 4 * window_margin,
-                          item_height);
-  toInputBox->setMinimum(1);
-  toInputBox->setMaximum(4);
-  toInputBox->setValue(1);
-
-  QObject::connect(toInputBox, &QSpinBox::valueChanged, [this](auto newTo) { this->to = newTo; });
-
-  // Button to set new route
-  auto setRouteButton = new QPushButton("Set", this);
-  setRouteButton->setGeometry(window_margin + 4 * (window_width / 4 - 4 * window_margin),
-                              window_margin + item_offset_vertical * 4,
-                              50,
-                              item_height);
-
-  // Run setRoute() on button press
-  QObject::connect(setRouteButton, &QPushButton::pressed, [this]() { setRoute(); });
-}
-
-MainWindow::~MainWindow() {
-  delete ui;
 }
 
 void MainWindow::connect() {
