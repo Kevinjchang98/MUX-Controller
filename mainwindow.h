@@ -6,6 +6,8 @@
 #define MUX_CONTROLLER__MAINWINDOW_H_
 
 #include <QWidget>
+#include <windows.h>
+#include <winsock2.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -27,13 +29,16 @@ class MainWindow : public QWidget {
   static constexpr int item_offset_vertical = 40;
   static constexpr int item_height = 30;
 
+  sockaddr_in sendSockAddr{};
+  unsigned long long clientSd{};
+
   QString host = "192.168.150.25";
   int port = 5000;
 
   int from = 1;
   int to = 1;
 
-  void connectionHandler();
+  void connect();
   void setRoute();
 };
 

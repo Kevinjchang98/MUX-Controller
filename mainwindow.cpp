@@ -9,6 +9,8 @@
 #include <QSpinBox>
 #include <QLabel>
 #include <iostream>
+#include <QWidget>
+#include <winsock2.h>
 #include "mainwindow.h"
 #include "ui_MainWindow.h"
 
@@ -49,8 +51,8 @@ MainWindow::MainWindow(QWidget *parent) :
   auto connectButton = new QPushButton("Connect", this);
   connectButton->setGeometry(10, window_margin + item_offset_vertical * 2, 80, item_height);
 
-  // Run connectionHandler() on button press
-  QObject::connect(connectButton, &QPushButton::pressed, [=]() { connectionHandler(); });
+  // Run connect() on button press
+  QObject::connect(connectButton, &QPushButton::pressed, [=]() { connect(); });
 
   // MUX Connection Label
   auto inputRoutingLabel = new QLabel(this);
@@ -95,8 +97,21 @@ MainWindow::~MainWindow() {
   delete ui;
 }
 
-void MainWindow::connectionHandler() {
-  std::cout << this->host.toStdString() << std::endl;
+void MainWindow::connect() {
+  sendSockAddr = {};
+  sendSockAddr.sin_family = AF_INET;
+  sendSockAddr.sin_addr.s_addr = inet_addr(host.toStdString().c_str());
+  sendSockAddr.sin_port = htons(port);
+  clientSd = socket(AF_INET, SOCK_STREAM, 0);
+
+  int attemptNumber = 0;
+  while (::connect(clientSd, (sockaddr *) &sendSockAddr, sizeof(sendSockAddr)) < 0 && attemptNumber++ < 10) {
+    std::cout << attemptNumber << " - Error connecting to socket" << std::endl;
+
+    clientSd = socket(AF_INET, SOCK_STREAM, 0);
+  }
+
+  std::cout << "Connected to the server\n";
 }
 
 void MainWindow::setRoute() {

@@ -18,6 +18,9 @@ target_link_libraries(MUX_Controller
         Qt::Core
         Qt::Gui
         Qt::Widgets
+        ws2_32
+        Mswsock
+        AdvApi32
         )
 
 if (WIN32)
