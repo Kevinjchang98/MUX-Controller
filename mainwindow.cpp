@@ -109,11 +109,16 @@ void MainWindow::connect() {
 
     clientSd = socket(AF_INET, SOCK_STREAM, 0);
   }
-
-  std::cout << "Connected to the server\n";
 }
 
 void MainWindow::setRoute() {
-  std::cout << this->from << std::endl;
-  std::cout << this->to << std::endl;
+  // TODO: Confirm constructing message correctly
+  routeString[6] = '0' + this->from;
+  routeString[7] = '0' + this->to;
+
+  for (int i = 0; i < 11; i++)
+    std::cout << routeString[i];
+  std::cout << std::endl;
+
+  send(clientSd, routeString, strlen(routeString), 0);
 }

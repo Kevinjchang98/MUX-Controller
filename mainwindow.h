@@ -6,7 +6,6 @@
 #define MUX_CONTROLLER__MAINWINDOW_H_
 
 #include <QWidget>
-#include <windows.h>
 #include <winsock2.h>
 
 QT_BEGIN_NAMESPACE
@@ -37,6 +36,7 @@ class MainWindow : public QWidget {
 
   int from = 1;
   int to = 1;
+  char routeString[11] = "MT00SW00NT";
 
   void connect();
   void setRoute();
