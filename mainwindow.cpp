@@ -43,15 +43,15 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), ui(new Ui::MainWindow
   portInputBox->setValue(5000);
 
   // Update host and port on value change
-  QObject::connect(hostInputBox, &QLineEdit::textEdited, [=](auto newHost) { this->host = newHost; });
-  QObject::connect(portInputBox, &QSpinBox::valueChanged, [=](auto newPort) { this->port = newPort; });
+  QObject::connect(hostInputBox, &QLineEdit::textEdited, [this](auto newHost) { this->host = newHost; });
+  QObject::connect(portInputBox, &QSpinBox::valueChanged, [this](auto newPort) { this->port = newPort; });
 
   // Button to connect to MUX
   auto connectButton = new QPushButton("Connect", this);
   connectButton->setGeometry(10, window_margin + item_offset_vertical * 2, 80, item_height);
 
   // Run connect() on button press
-  QObject::connect(connectButton, &QPushButton::pressed, [=]() { connect(); });
+  QObject::connect(connectButton, &QPushButton::pressed, [this]() { connect(); });
 
   // MUX Connection Label
   auto inputRoutingLabel = new QLabel(this);
@@ -68,7 +68,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), ui(new Ui::MainWindow
   fromInputBox->setMaximum(4);
   fromInputBox->setValue(1);
 
-  QObject::connect(fromInputBox, &QSpinBox::valueChanged, [=](auto newFrom) { this->from = newFrom; });
+  QObject::connect(fromInputBox, &QSpinBox::valueChanged, [this](auto newFrom) { this->from = newFrom; });
 
   auto toInputBox = new QSpinBox(this);
   toInputBox->setGeometry(window_margin + 2 * (window_width / 4 - 4 * window_margin),
@@ -79,7 +79,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), ui(new Ui::MainWindow
   toInputBox->setMaximum(4);
   toInputBox->setValue(1);
 
-  QObject::connect(toInputBox, &QSpinBox::valueChanged, [=](auto newTo) { this->to = newTo; });
+  QObject::connect(toInputBox, &QSpinBox::valueChanged, [this](auto newTo) { this->to = newTo; });
 
   // Button to set new route
   auto setRouteButton = new QPushButton("Set", this);
@@ -89,7 +89,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), ui(new Ui::MainWindow
                               item_height);
 
   // Run setRoute() on button press
-  QObject::connect(setRouteButton, &QPushButton::pressed, [=]() { setRoute(); });
+  QObject::connect(setRouteButton, &QPushButton::pressed, [this]() { setRoute(); });
 }
 
 MainWindow::~MainWindow() {
