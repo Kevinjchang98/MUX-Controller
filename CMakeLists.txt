@@ -13,7 +13,7 @@ find_package(Qt6 COMPONENTS
         Widgets
         REQUIRED)
 
-add_executable(MUX_Controller main.cpp mainwindow.cpp mainwindow.h mainwindow.ui)
+add_executable(MUX_Controller WIN32 main.cpp mainwindow.cpp mainwindow.h mainwindow.ui)
 target_link_libraries(MUX_Controller
         Qt::Core
         Qt::Gui
