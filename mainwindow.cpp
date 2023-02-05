@@ -10,7 +10,12 @@
 #include <QLabel>
 #include <iostream>
 #include <QWidget>
-#include <winsock2.h>
+#ifdef __WIN32__
+  #include <winsock2.h>
+#endif
+#ifdef __MACH__
+  #include <arpa/inet.h>
+#endif
 #include "mainwindow.h"
 #include "ui_MainWindow.h"
 
