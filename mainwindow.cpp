@@ -11,10 +11,10 @@
 #include <iostream>
 #include <QWidget>
 #ifdef __WIN32__
-  #include <winsock2.h>
+#include <winsock2.h>
 #endif
 #ifdef __MACH__
-  #include <arpa/inet.h>
+#include <arpa/inet.h>
 #endif
 #include "mainwindow.h"
 #include "ui_MainWindow.h"
@@ -29,7 +29,8 @@ MainWindow::~MainWindow() {
   delete ui;
 }
 
-void MainWindow::routeForm() {// MUX Connection Label
+void MainWindow::routeForm() {
+  // MUX Connection Label
   auto inputRoutingLabel = new QLabel(this);
   inputRoutingLabel->setText("Display Routing");
   inputRoutingLabel->setGeometry(window_margin, window_margin + item_offset_vertical * 3, window_width, item_height);
@@ -130,5 +131,5 @@ void MainWindow::setRoute() {
     std::cout << i;
   std::cout << std::endl;
 
-  send(clientSd, routeString, strlen(routeString), 0);
+  send(clientSd, routeString, strlen(routeString) , 0);
 }
