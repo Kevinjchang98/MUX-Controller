@@ -14,14 +14,25 @@ find_package(Qt6 COMPONENTS
         REQUIRED)
 
 add_executable(MUX_Controller WIN32 main.cpp mainwindow.cpp mainwindow.h mainwindow.ui)
-target_link_libraries(MUX_Controller
-        Qt::Core
-        Qt::Gui
-        Qt::Widgets
-        )
+
+if(WIN32)
+    target_link_libraries(MUX_Controller
+            Qt::Core
+            Qt::Gui
+            Qt::Widgets
+            ws2_32
+            Mswsock
+            AdvApi32)
+endif()
+
+if(UNIX)
+    target_link_libraries(MUX_Controller
+            Qt::Core
+            Qt::Gui
+            Qt::Widgets)
+endif()
 
 if (WIN32)
-    target_link_libraries(ws2_32 Mswsock AdvApi32)
     set(DEBUG_SUFFIX)
     if (MSVC AND CMAKE_BUILD_TYPE MATCHES "Debug")
         set(DEBUG_SUFFIX "d")
