@@ -6,6 +6,7 @@
 #define MUX_CONTROLLER__MAINWINDOW_H_
 
 #include <QWidget>
+#include <QLabel>
 #ifdef __WIN32__
 #include <winsock2.h>
 #endif
@@ -27,8 +28,8 @@ class MainWindow : public QWidget {
  private:
   Ui::MainWindow *ui;
 
-  static constexpr int window_width = 400;
-  static constexpr int window_height = 400;
+  static constexpr int window_width = 350;
+  static constexpr int window_height = 500;
   static constexpr int window_margin = 10;
   static constexpr int item_offset_vertical = 40;
   static constexpr int item_height = 30;
@@ -36,17 +37,21 @@ class MainWindow : public QWidget {
   sockaddr_in sendSockAddr{};
   unsigned long long clientSd{};
 
+  QLabel *statusText;
+
   QString host = "192.168.150.25";
   int port = 5000;
+  bool isConnected = false;
 
   int from = 1;
   int to = 1;
   char routeString[11] = "MT00SW00NT";
 
-  void connect();
-  void setRoute();
+  auto connect() -> bool;
+  auto setRoute() -> bool;
   void connectionForm();
   void routeForm();
+  void statusBar();
 };
 
 #endif //MUX_CONTROLLER__MAINWINDOW_H_

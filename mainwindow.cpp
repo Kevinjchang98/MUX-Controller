@@ -2,8 +2,6 @@
 // Created by Kevin Chang on 2/4/23.
 //
 
-// You may need to build the project (run Qt uic code generator) to get "ui_MainWindow.h" resolved
-
 #include <QPushButton>
 #include <QLineEdit>
 #include <QSpinBox>
@@ -23,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), ui(new Ui::MainWindow
   ui->setupUi(this);
   connectionForm();
   routeForm();
+  statusBar();
 }
 
 MainWindow::~MainWindow() {
@@ -66,7 +65,15 @@ void MainWindow::routeForm() {
                               item_height);
 
   // Run setRoute() on button press
-  QObject::connect(setRouteButton, &QPushButton::pressed, [this]() { setRoute(); });
+  QObject::connect(setRouteButton,
+                   &QPushButton::pressed,
+                   [this]() {
+                     if (setRoute())
+                       statusText->setText(QString::fromStdString(
+                           "Route updated to " + std::to_string(from) + " -> " + std::to_string(to)));
+                     else
+                       statusText->setText("Error updating route");
+                   });
 }
 
 void MainWindow::connectionForm() {
@@ -104,10 +111,22 @@ void MainWindow::connectionForm() {
   connectButton->setGeometry(10, window_margin + item_offset_vertical * 2, 80, item_height);
 
   // Run connect() on button press
-  QObject::connect(connectButton, &QPushButton::pressed, [this]() { connect(); });
+  QObject::connect(connectButton, &QPushButton::pressed, [this]() {
+    if (connect()) statusText->setText("Connected successfully");
+    else statusText->setText("Failed to connect");
+  });
 }
 
-void MainWindow::connect() {
+void MainWindow::statusBar() {
+  statusText = new QLabel(this);
+  statusText->setText("Not connected");
+  statusText->setGeometry(window_margin,
+                          window_height - (window_margin + item_height),
+                          window_width - window_margin * 2,
+                          item_height);
+}
+
+auto MainWindow::connect() -> bool {
   sendSockAddr = {};
   sendSockAddr.sin_family = AF_INET;
   sendSockAddr.sin_addr.s_addr = inet_addr(host.toStdString().c_str());
@@ -115,14 +134,23 @@ void MainWindow::connect() {
   clientSd = socket(AF_INET, SOCK_STREAM, 0);
 
   int attemptNumber = 0;
-  while (::connect(clientSd, (sockaddr *) &sendSockAddr, sizeof(sendSockAddr)) < 0 && attemptNumber++ < 10) {
+  while (::connect(clientSd, (sockaddr *) &sendSockAddr, sizeof(sendSockAddr)) < 0) {
     std::cout << attemptNumber << " - Error connecting to socket" << std::endl;
 
     clientSd = socket(AF_INET, SOCK_STREAM, 0);
+
+    if (++attemptNumber == 11)
+      return false;
   }
+
+  isConnected = true;
+  return true;
 }
 
-void MainWindow::setRoute() {
+auto MainWindow::setRoute() -> bool {
+  if (!isConnected)
+    return false;
+
   // TODO: Confirm constructing message correctly
   routeString[6] = '0' + this->from;
   routeString[7] = '0' + this->to;
@@ -131,5 +159,7 @@ void MainWindow::setRoute() {
     std::cout << i;
   std::cout << std::endl;
 
-  send(clientSd, routeString, strlen(routeString) , 0);
+  send(clientSd, routeString, strlen(routeString), 0);
+
+  return true;
 }
