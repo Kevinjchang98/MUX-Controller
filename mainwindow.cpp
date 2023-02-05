@@ -10,8 +10,7 @@
 #include <QWidget>
 #ifdef __WIN32__
 #include <winsock2.h>
-#endif
-#ifdef __MACH__
+#else
 #include <arpa/inet.h>
 #endif
 #include "mainwindow.h"
