@@ -116,8 +116,8 @@ void MainWindow::setRoute() {
   routeString[6] = '0' + this->from;
   routeString[7] = '0' + this->to;
 
-  for (int i = 0; i < 11; i++)
-    std::cout << routeString[i];
+  for (char i : routeString)
+    std::cout << i;
   std::cout << std::endl;
 
   send(clientSd, routeString, strlen(routeString), 0);
