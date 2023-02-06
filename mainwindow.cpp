@@ -74,6 +74,24 @@ void MainWindow::routeForm() {
                      else
                        statusText->setText("Error updating route");
                    });
+
+  // Button to get current route
+  auto getRouteButton = new QPushButton("Get current route", this);
+  getRouteButton->setGeometry(window_margin ,
+                              window_margin + item_offset_vertical * 5,
+                              150,
+                              item_height);
+
+  // Run getRoute() on button press
+  QObject::connect(getRouteButton,
+                   &QPushButton::pressed,
+                   [this]() {
+                     auto res = getRoute();
+                     if (!res.empty())
+                       statusText->setText(QString::fromStdString(res));
+                     else
+                       statusText->setText("Error getting route");
+                   });
 }
 
 void MainWindow::connectionForm() {
@@ -148,8 +166,7 @@ auto MainWindow::connect() -> bool {
 }
 
 auto MainWindow::setRoute() const -> bool {
-  if (!isConnected)
-    return false;
+  if (!isConnected) return false;
 
   char routeString[13] = "MT00SW0000NT";
   routeString[7] = this->from + '0';
@@ -162,4 +179,27 @@ auto MainWindow::setRoute() const -> bool {
   send(clientSd, routeString, 12, 0);
 
   return true;
+}
+
+auto MainWindow::getRoute() const -> std::string {
+  if (!isConnected) return "";
+
+  std::cout << "Getting route\n";
+
+  char buffer[32] = "";
+  std::string res;
+
+  send(clientSd, "MT00RD0000NT", 12, 0);
+  std::cout << "Getting route\n";
+
+  // Receive until we've gotten all 28 bytes
+  int n = 0;
+  while (res.size() < 28) {
+    n = recv(clientSd, buffer, sizeof(buffer), 0);
+    res.append(buffer, n);
+  }
+
+  std::cout << res << std::endl;
+
+  return res;
 }

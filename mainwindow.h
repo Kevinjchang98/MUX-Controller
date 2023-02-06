@@ -47,6 +47,7 @@ class MainWindow : public QWidget {
 
   auto connect() -> bool;
   [[nodiscard]] auto setRoute() const -> bool;
+  [[nodiscard]] auto getRoute() const -> std::string;
   void connectionForm();
   void routeForm();
   void statusBar();
