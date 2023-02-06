@@ -34,7 +34,7 @@ class MainWindow : public QWidget {
   static constexpr int item_height = 30;
 
   sockaddr_in sendSockAddr{};
-  int clientSd{};
+  int muxSocket{};
 
   QLabel *statusText;
 

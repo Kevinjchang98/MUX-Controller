@@ -144,7 +144,7 @@ auto MainWindow::connect() -> bool {
   sendSockAddr.sin_family = AF_INET;
   sendSockAddr.sin_addr.s_addr = inet_addr(host.toStdString().c_str());
   sendSockAddr.sin_port = htons(port);
-  clientSd = socket(AF_INET, SOCK_STREAM, 0);
+  muxSocket = socket(AF_INET, SOCK_STREAM, 0);
 
   // Run WSAStartup for Winsock
 #ifdef _WIN32
@@ -154,10 +154,10 @@ auto MainWindow::connect() -> bool {
 
   int attemptNumber = 0;
 
-  while (::connect(clientSd, (sockaddr *) &sendSockAddr, sizeof(sendSockAddr)) < 0) {
+  while (::connect(muxSocket, (sockaddr *) &sendSockAddr, sizeof(sendSockAddr)) < 0) {
     std::cout << attemptNumber << " - Error connecting to socket" << std::endl;
 
-    clientSd = socket(AF_INET, SOCK_STREAM, 0);
+    muxSocket = socket(AF_INET, SOCK_STREAM, 0);
 
     if (++attemptNumber == 11)
       return false;
@@ -178,7 +178,7 @@ auto MainWindow::setRoute() const -> bool {
     std::cout << routeString[i];
   std::cout << std::endl;
 
-  send(clientSd, routeString, 12, 0);
+  send(muxSocket, routeString, 12, 0);
 
   return true;
 }
@@ -191,13 +191,13 @@ auto MainWindow::getRoute() const -> std::string {
   char buffer[32] = "";
   std::string res;
 
-  send(clientSd, "MT00RD0000NT", 12, 0);
+  send(muxSocket, "MT00RD0000NT", 12, 0);
   std::cout << "Getting route\n";
 
   // Receive until we've gotten all 28 bytes
   int n = 0;
   while (res.size() < 28) {
-    n = recv(clientSd, buffer, sizeof(buffer), 0);
+    n = recv(muxSocket, buffer, sizeof(buffer), 0);
     res.append(buffer, n);
   }
 
