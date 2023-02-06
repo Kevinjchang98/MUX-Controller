@@ -18,6 +18,7 @@
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
+
   connectionForm();
   routeForm();
   statusBar();
@@ -146,19 +147,19 @@ auto MainWindow::connect() -> bool {
   return true;
 }
 
-auto MainWindow::setRoute() -> bool {
+auto MainWindow::setRoute() const -> bool {
   if (!isConnected)
     return false;
 
-  // TODO: Confirm constructing message correctly
-  routeString[6] = '0' + this->from;
-  routeString[7] = '0' + this->to;
+  char routeString[13] = "MT00SW0000NT";
+  routeString[7] = this->from + '0';
+  routeString[9] = this->to + '0';
 
-  for (char i : routeString)
-    std::cout << i;
+  for (int i = 0; i < 12; i++)
+    std::cout << routeString[i];
   std::cout << std::endl;
 
-  send(clientSd, routeString, strlen(routeString), 0);
+  send(clientSd, routeString, 12, 0);
 
   return true;
 }

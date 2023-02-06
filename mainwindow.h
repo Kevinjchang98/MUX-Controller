@@ -34,7 +34,7 @@ class MainWindow : public QWidget {
   static constexpr int item_height = 30;
 
   sockaddr_in sendSockAddr{};
-  unsigned long long clientSd{};
+  int clientSd{};
 
   QLabel *statusText;
 
@@ -44,10 +44,9 @@ class MainWindow : public QWidget {
 
   int from = 1;
   int to = 1;
-  char routeString[11] = "MT00SW00NT";
 
   auto connect() -> bool;
-  auto setRoute() -> bool;
+  [[nodiscard]] auto setRoute() const -> bool;
   void connectionForm();
   void routeForm();
   void statusBar();
