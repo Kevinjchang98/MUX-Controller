@@ -10,9 +10,7 @@
 #include <QWidget>
 
 #ifdef __WIN32__
-
 #include <winsock2.h>
-
 #else
 #include <arpa/inet.h>
 #endif
@@ -69,33 +67,26 @@ void MainWindow::routeForm() {
                               item_height);
 
   // Run setRoute() on button press
-  QObject::connect(setRouteButton,
-                   &QPushButton::pressed,
-                   [this]() {
-                       if (setRoute())
-                         statusText->setText(QString::fromStdString(
-                                 "Route updated to " + std::to_string(from) + " -> " + std::to_string(to)));
-                       else
-                         statusText->setText("Error updating route");
-                   });
+  QObject::connect(setRouteButton, &QPushButton::pressed, [this]() {
+    if (setRoute())
+      statusText->setText(QString::fromStdString(
+          "Route updated to " + std::to_string(from) + " -> " + std::to_string(to)));
+    else
+      statusText->setText("Error updating route");
+  });
 
   // Button to get current route
   auto getRouteButton = new QPushButton("Get current route", this);
-  getRouteButton->setGeometry(window_margin,
-                              window_margin + item_offset_vertical * 5,
-                              150,
-                              item_height);
+  getRouteButton->setGeometry(window_margin, window_margin + item_offset_vertical * 5, 150, item_height);
 
   // Run getRoute() on button press
-  QObject::connect(getRouteButton,
-                   &QPushButton::pressed,
-                   [this]() {
-                       auto res = getRoute();
-                       if (!res.empty())
-                         statusText->setText(QString::fromStdString(res));
-                       else
-                         statusText->setText("Error getting route");
-                   });
+  QObject::connect(getRouteButton, &QPushButton::pressed, [this]() {
+    auto res = getRoute();
+    if (!res.empty())
+      statusText->setText(QString::fromStdString(res));
+    else
+      statusText->setText("Error getting route");
+  });
 }
 
 void MainWindow::connectionForm() {
@@ -134,8 +125,8 @@ void MainWindow::connectionForm() {
 
   // Run connect() on button press
   QObject::connect(connectButton, &QPushButton::pressed, [this]() {
-      if (connect()) statusText->setText("Connected successfully");
-      else statusText->setText("Failed to connect");
+    if (connect()) statusText->setText("Connected successfully");
+    else statusText->setText("Failed to connect");
   });
 }
 
