@@ -8,11 +8,15 @@
 #include <QLabel>
 #include <iostream>
 #include <QWidget>
+
 #ifdef __WIN32__
+
 #include <winsock2.h>
+
 #else
 #include <arpa/inet.h>
 #endif
+
 #include "mainwindow.h"
 #include "ui_MainWindow.h"
 
@@ -68,16 +72,16 @@ void MainWindow::routeForm() {
   QObject::connect(setRouteButton,
                    &QPushButton::pressed,
                    [this]() {
-                     if (setRoute())
-                       statusText->setText(QString::fromStdString(
-                           "Route updated to " + std::to_string(from) + " -> " + std::to_string(to)));
-                     else
-                       statusText->setText("Error updating route");
+                       if (setRoute())
+                         statusText->setText(QString::fromStdString(
+                                 "Route updated to " + std::to_string(from) + " -> " + std::to_string(to)));
+                       else
+                         statusText->setText("Error updating route");
                    });
 
   // Button to get current route
   auto getRouteButton = new QPushButton("Get current route", this);
-  getRouteButton->setGeometry(window_margin ,
+  getRouteButton->setGeometry(window_margin,
                               window_margin + item_offset_vertical * 5,
                               150,
                               item_height);
@@ -86,11 +90,11 @@ void MainWindow::routeForm() {
   QObject::connect(getRouteButton,
                    &QPushButton::pressed,
                    [this]() {
-                     auto res = getRoute();
-                     if (!res.empty())
-                       statusText->setText(QString::fromStdString(res));
-                     else
-                       statusText->setText("Error getting route");
+                       auto res = getRoute();
+                       if (!res.empty())
+                         statusText->setText(QString::fromStdString(res));
+                       else
+                         statusText->setText("Error getting route");
                    });
 }
 
@@ -130,8 +134,8 @@ void MainWindow::connectionForm() {
 
   // Run connect() on button press
   QObject::connect(connectButton, &QPushButton::pressed, [this]() {
-    if (connect()) statusText->setText("Connected successfully");
-    else statusText->setText("Failed to connect");
+      if (connect()) statusText->setText("Connected successfully");
+      else statusText->setText("Failed to connect");
   });
 }
 
@@ -151,7 +155,14 @@ auto MainWindow::connect() -> bool {
   sendSockAddr.sin_port = htons(port);
   clientSd = socket(AF_INET, SOCK_STREAM, 0);
 
+  // Run WSAStartup for Winsock
+#ifdef _WIN32
+  WSADATA wsaData;
+  WSAStartup(MAKEWORD(2, 2), &wsaData);
+#endif
+
   int attemptNumber = 0;
+
   while (::connect(clientSd, (sockaddr *) &sendSockAddr, sizeof(sendSockAddr)) < 0) {
     std::cout << attemptNumber << " - Error connecting to socket" << std::endl;
 
