@@ -6,7 +6,6 @@
 #include <QLineEdit>
 #include <QSpinBox>
 #include <QLabel>
-#include <iostream>
 #include <QWidget>
 
 #ifdef __WIN32__
@@ -155,8 +154,6 @@ auto MainWindow::connect() -> bool {
   int attemptNumber = 0;
 
   while (::connect(muxSocket, (sockaddr *) &sendSockAddr, sizeof(sendSockAddr)) < 0) {
-    std::cout << attemptNumber << " - Error connecting to socket" << std::endl;
-
     muxSocket = socket(AF_INET, SOCK_STREAM, 0);
 
     if (++attemptNumber == 11)
@@ -174,10 +171,6 @@ auto MainWindow::setRoute() const -> bool {
   routeString[7] = this->from + '0';
   routeString[9] = this->to + '0';
 
-  for (int i = 0; i < 12; i++)
-    std::cout << routeString[i];
-  std::cout << std::endl;
-
   send(muxSocket, routeString, 12, 0);
 
   return true;
@@ -186,13 +179,10 @@ auto MainWindow::setRoute() const -> bool {
 auto MainWindow::getRoute() const -> std::string {
   if (!isConnected) return "";
 
-  std::cout << "Getting route\n";
-
   char buffer[32] = "";
   std::string res;
 
   send(muxSocket, "MT00RD0000NT", 12, 0);
-  std::cout << "Getting route\n";
 
   // Receive until we've gotten all 28 bytes
   int n = 0;
@@ -201,7 +191,6 @@ auto MainWindow::getRoute() const -> std::string {
     res.append(buffer, n);
   }
 
-  std::cout << res << std::endl;
-
-  return res;
+  return std::string() + "Current routing: " + res[8] + "->" + res[6] + "  " + res[13] + "->" + res[11] + "  " + res[18]
+      + "->" + res[16] + "  " + res[23] + "->" + res[21];
 }
