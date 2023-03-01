@@ -15,7 +15,7 @@ find_package(Qt6 COMPONENTS
 
 add_executable(MUX_Controller WIN32 main.cpp mainwindow.cpp mainwindow.h mainwindow.ui)
 
-if(WIN32)
+if (WIN32)
     target_link_libraries(MUX_Controller
             Qt::Core
             Qt::Gui
@@ -23,14 +23,14 @@ if(WIN32)
             ws2_32
             Mswsock
             AdvApi32)
-endif()
+endif ()
 
-if(UNIX)
+if (UNIX)
     target_link_libraries(MUX_Controller
             Qt::Core
             Qt::Gui
             Qt::Widgets)
-endif()
+endif ()
 
 if (WIN32)
     set(DEBUG_SUFFIX)
